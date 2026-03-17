@@ -1,4 +1,4 @@
-import os  # تم تصحيح الحرف الأول إلى صغير
+import os
 
 # --- إعدادات الربط الأساسية ---
 # توكن البوت (يتم جلبه من متغيرات النظام)
@@ -7,13 +7,13 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 # معرف المطور الرئيسي
 DEV_ID = 873158772
 
-# معرف السبريدشيت (MASTER_SS_ID) - تأكد من مشاركة البريد مع هذا الشيت حصراً
+# معرف السبريدشيت (MASTER_SS_ID)
 MASTER_SS_ID = "1M9osk6OpItLJKmylYz0bUlmjF99WWE_zj2Zk7LAaOkU"
 
 # اسم ملف قاعدة البيانات المحلية
 DB_FILE = "db.json"
 
-# اسم ملف مفتاح الخدمة الخاص بجوجل (تأكد من مطابقة الاسم للملف الفعلي)
+# اسم ملف مفتاح الخدمة الخاص بجوجل
 SERVICE_ACCOUNT_FILE = "service_account.json"
 
 # --- تعريف حالات المحادثة (Conversation States) ---
@@ -29,7 +29,7 @@ SERVICE_ACCOUNT_FILE = "service_account.json"
     GET_EMAIL,
 ) = range(7)
 
-# حالات المديرين والمطور (7-28)
+# حالات المديرين والمطور (7-30)
 (
     GET_ACCEPT_MESSAGE,
     GET_REJECT_MESSAGE,
@@ -46,6 +46,7 @@ SERVICE_ACCOUNT_FILE = "service_account.json"
     ADD_CATEGORY_NAME,
     DELETE_CATEGORY_CONFIRM,
     DELETE_COURSE_CONFIRM,
+    CONFIRM_DELETE_COURSE,      # تم التأكد من وجودها لتوافق ملف الأدمن
     EDIT_COURSE_CAT,
     MOVE_COURSE_SELECT_COURSE,
     MOVE_COURSE_SELECT_CAT,
