@@ -8,7 +8,7 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 DEV_ID = 873158772
 
 # معرف السبريدشيت (MASTER_SS_ID)
-MASTER_SS_ID = "1E1xEwv7hzC4sGqCUPdcub8wRGGjW1LfLf8gTH6_YUS0"
+MASTER_SS_ID = "1M9osk6OpItLJKmylYz0bUlmjF99WWE_zj2Zk7LAaOkU"
 
 # اسم ملف قاعدة البيانات المحلية
 DB_FILE = "db.json"
