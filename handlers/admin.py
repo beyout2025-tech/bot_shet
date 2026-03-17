@@ -477,3 +477,25 @@ async def get_promo_percent(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     except:
         await update.message.reply_text("خطأ! أرسل رقماً صحيحاً.")
         return GET_PROMO_PERCENT
+
+# أضف هذا الكود في ملف handlers/admin.py
+
+async def delete_course_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    query = update.callback_query
+    await query.answer()
+    
+    db = load_db()
+    if not db["courses"]:
+        await query.edit_message_text("❌ لا توجد دورات لحذفها حالياً.")
+        return ConversationHandler.END
+
+    keyboard = []
+    for course in db["courses"]:
+        keyboard.append([InlineKeyboardButton(course["name"], callback_data=f"conf_del_{course['id']}")])
+    
+    keyboard.append([InlineKeyboardButton("🔙 إلغاء", callback_data="dev_courses")])
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    
+    await query.edit_message_text("اختر الدورة التي تريد حذفها نهائياً:", reply_markup=reply_markup)
+    return CONFIRM_DELETE_COURSE
+
