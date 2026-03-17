@@ -1,4 +1,4 @@
-import os
+import os  # تم تصحيح الحرف الأول إلى صغير
 
 # --- إعدادات الربط الأساسية ---
 # توكن البوت (يتم جلبه من متغيرات النظام)
@@ -7,13 +7,13 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 # معرف المطور الرئيسي
 DEV_ID = 873158772
 
-# معرف السبريدشيت (MASTER_SS_ID)
+# معرف السبريدشيت (MASTER_SS_ID) - تأكد من مشاركة البريد مع هذا الشيت حصراً
 MASTER_SS_ID = "1M9osk6OpItLJKmylYz0bUlmjF99WWE_zj2Zk7LAaOkU"
 
 # اسم ملف قاعدة البيانات المحلية
 DB_FILE = "db.json"
 
-# اسم ملف مفتاح الخدمة الخاص بجوجل
+# اسم ملف مفتاح الخدمة الخاص بجوجل (تأكد من مطابقة الاسم للملف الفعلي)
 SERVICE_ACCOUNT_FILE = "service_account.json"
 
 # --- تعريف حالات المحادثة (Conversation States) ---
@@ -54,4 +54,3 @@ SERVICE_ACCOUNT_FILE = "service_account.json"
     GET_PROMO_PERCENT,
     CONFIRM_FINAL_DELETE,
 ) = range(7, 29)
-
