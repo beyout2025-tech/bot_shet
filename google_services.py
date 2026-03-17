@@ -49,6 +49,7 @@ class SheetProxy:
     def get_all_values(self):
         return call_apps_script(self.name, "read")
 
+
 # تعريف الأوراق ككائنات وهمية (Proxies) لكي لا نغير الكود في handlers
 SHEET_CATS = SheetProxy("الأقسام")
 SHEET_COURSES = SheetProxy("الدورات_التدريبية")
