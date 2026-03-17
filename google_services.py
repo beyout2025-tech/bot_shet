@@ -7,32 +7,37 @@ from config import MASTER_SS_ID
 # 1. إعداد الصلاحيات
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
-# 2. جلب البيانات من Railway (أو ملف محلي إذا فشل)
+# 2. جلب البيانات من متغيرات البيئة (Railway) بأسلوب معالج للأخطاء
 creds_json = os.getenv("GOOGLE_SHEETS_CREDS")
 
 try:
     if creds_json:
-        # القراءة من متغيرات البيئة (الطريقة الآمنة لـ Railway)
+        # تحويل النص إلى قاموس JSON
         creds_dict = json.loads(creds_json)
+        
+        # ✅ معالجة ذكية: إصلاح مشكلة "JWT Signature" الناتجة عن تلف رموز السطر الجديد \n
+        if "private_key" in creds_dict and "\\n" in creds_dict["private_key"]:
+            creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
+            
         creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
     else:
-        # القراءة من ملف (للتشغيل المحلي)
+        # الحل الاحتياطي (للمطور محلياً)
         from config import SERVICE_ACCOUNT_FILE
         creds = ServiceAccountCredentials.from_json_keyfile_name(SERVICE_ACCOUNT_FILE, scope)
-except json.JSONDecodeError:
-    print("❌ خطأ: محتوى متغير GOOGLE_SHEETS_CREDS ليس JSON صحيحاً!")
-    raise
 except Exception as e:
-    print(f"❌ خطأ غير متوقع: {e}")
+    # طباعة الخطأ بوضوح في السجلات لمعرفته
+    print(f"❌ خطأ في معالجة بيانات الاعتماد: {e}")
     raise
 
 # 3. تخويل الاتصال
 client = gspread.authorize(creds)
 
 def get_ss():
+    """فتح السبريدشيت باستخدام الـ ID الثابت"""
     return client.open_by_key(MASTER_SS_ID)
 
-# --- تعريف أوراق العمل ---
+# --- تعريف أوراق العمل (تم التأكد من صحة الكلمات العربية) ---
+# ملاحظة: الكلمات أدناه مكتوبة بترميز UTF-8 الصحيح
 SHEET_CATS = get_ss().worksheet("الأقسام")
 SHEET_PROMO_CODES = get_ss().worksheet("أكواد_الخصم")
 SHEET_COUPONS = get_ss().worksheet("الكوبونات")
