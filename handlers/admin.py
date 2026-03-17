@@ -478,6 +478,7 @@ async def get_promo_percent(update: Update, context: ContextTypes.DEFAULT_TYPE) 
         await update.message.reply_text("خطأ! أرسل رقماً صحيحاً.")
         return GET_PROMO_PERCENT
 
+
 # أضف هذا الكود في ملف handlers/admin.py
 
 async def delete_course_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -498,4 +499,42 @@ async def delete_course_start(update: Update, context: ContextTypes.DEFAULT_TYPE
     
     await query.edit_message_text("اختر الدورة التي تريد حذفها نهائياً:", reply_markup=reply_markup)
     return CONFIRM_DELETE_COURSE
+
+
+
+# --- إضافة الدوال المفقودة في handlers/admin.py ---
+
+async def confirm_delete_course(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    query = update.callback_query
+    await query.answer()
+    course_id = query.data.replace("conf_del_", "")
+    
+    db = load_db()
+    db["courses"] = [c for c in db["courses"] if str(c["id"]) != course_id]
+    save_db(db)
+    
+    await query.edit_message_text(f"✅ تم حذف الدورة بنجاح.")
+    return ConversationHandler.END
+
+async def move_course_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    # دالة لبدء عملية نقل دورة من قسم لآخر
+    pass 
+
+async def move_course_select_category(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    pass
+
+async def move_course(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    pass
+
+async def download_backup(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    query = update.callback_query
+    await query.answer()
+    if os.path.exists(DB_FILE):
+        await context.bot.send_document(
+            chat_id=update.effective_user.id, 
+            document=open(DB_FILE, 'rb'), 
+            filename=f"backup_{datetime.now().strftime('%Y%m%d')}.json"
+        )
+    else:
+        await query.message.reply_text("❌ ملف قاعدة البيانات غير موجود.")
 
