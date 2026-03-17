@@ -1,12 +1,27 @@
 import gspread
+import json
+import os
 from oauth2client.service_account import ServiceAccountCredentials
-from config import MASTER_SS_ID, SERVICE_ACCOUNT_FILE
+from config import MASTER_SS_ID
 
-# إعداد الصلاحيات للوصول إلى Drive و Sheets
+# 1. إعداد الصلاحيات للوصول إلى Drive و Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
-# تهيئة الاتصال باستخدام ملف credentials.json (المسمى في config بـ SERVICE_ACCOUNT_FILE)
-creds = ServiceAccountCredentials.from_json_keyfile_name(SERVICE_ACCOUNT_FILE, scope)
+# 2. جلب محتوى المفتاح من متغيرات البيئة في Railway
+# سنبحث عن متغير سنسميه GOOGLE_SHEETS_CREDS
+creds_json = os.getenv("GOOGLE_SHEETS_CREDS")
+
+if creds_json:
+    # إذا وجدنا المتغير، نقوم بتحويل النص إلى قاموس (Dictionary)
+    creds_info = json.loads(creds_json)
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_info, scope)
+else:
+    # حل احتياطي للمطور (إذا كنت تعمل على جهازك الكمبيوتر)
+    # تأكد من تسمية المتغير في config.py بـ credentials.json
+    from config import SERVICE_ACCOUNT_FILE
+    creds = ServiceAccountCredentials.from_json_keyfile_name(SERVICE_ACCOUNT_FILE, scope)
+
+# 3. تخويل العميل
 client = gspread.authorize(creds)
 
 def get_ss():
@@ -24,7 +39,7 @@ SHEET_PROMO_CODES = get_ss().worksheet("أكواد_الخصم")
 # ورقة الكوبونات
 SHEET_COUPONS = get_ss().worksheet("الكوبونات")
 
-# ورقة قاعدة بيانات الطلاب (المسؤولة عن 39 عموداً)
+# ورقة قاعدة بيانات الطلاب
 SHEET_REGS = get_ss().worksheet("قاعدة_بيانات_الطلاب")
 
 # ورقة مستخدمي تيلجرام
